@@ -1021,9 +1021,43 @@
   .q4-full > summary::-webkit-details-marker { display: none; }
   .q4-full[open] > summary { margin-bottom: 12px; }
   #q4-dri-filters { margin: 12px 0 14px; }
+  .gate { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 24px; background: var(--bg, #F3F1EB); }
+  .gate-card { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 10px; padding: 28px 24px; border: 1px solid var(--border, #E5E5E3); border-radius: 20px; background: #fff; box-shadow: 0 18px 40px rgba(33,34,36,.08); }
+  .gate-card b { font-size: 20px; line-height: 24px; }
+  .gate-card span { font-size: 12px; line-height: 16px; color: var(--text-3, #919aaa); margin-bottom: 10px; }
+  .gate-card input { height: 44px; padding: 0 14px; border: 1px solid var(--border, #eceff3); border-radius: 12px; background: var(--bg, #f7f8f9); font-size: 14px; font-family: inherit; }
+  .gate-card input:focus { outline: none; border-color: #171714; background: #fff; }
+  .gate-card em { font-size: 12px; font-style: normal; color: #A32D2D; }
+  .gate-card button { height: 44px; border: 0; border-radius: 1000px; background: #171714; color: #fff; font-size: 14px; font-weight: 650; font-family: inherit; cursor: pointer; }
 </style>
 </head>
 <body>
+
+<div class="gate" id="wer-gate">
+  <form class="gate-card" id="wer-gate-form">
+    <b>Pre-Order &amp; Discovery</b>
+    <span>Weekly execution review</span>
+    <input type="password" autofocus placeholder="Clave de acceso" aria-label="Clave de acceso" id="wer-gate-input">
+    <em id="wer-gate-error" hidden>Clave incorrecta</em>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+<script>
+(function() {
+  var KEY = "PremioDiario2026MX";
+  var STORE = "wer-preorder-access";
+  var gate = document.getElementById("wer-gate");
+  function openGate() { if (gate) gate.remove(); }
+  try { if (sessionStorage.getItem(STORE) === KEY) { openGate(); return; } } catch (e) {}
+  document.getElementById("wer-gate-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    var value = document.getElementById("wer-gate-input").value.trim();
+    if (value !== KEY) { document.getElementById("wer-gate-error").hidden = false; return; }
+    try { sessionStorage.setItem(STORE, KEY); } catch (err) {}
+    openGate();
+  });
+})();
+</script>
 
 <div class="app" id="app">
 
