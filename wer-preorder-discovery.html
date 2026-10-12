@@ -792,6 +792,34 @@
   }
   .highlights-title { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
   .highlights-sub { font-size: 13px; color: var(--text-2); margin: 4px 0 12px; }
+  .results-table { overflow-x: auto; }
+  .results-table table { width: 100%; border-collapse: collapse; min-width: 640px; }
+  .results-table th {
+    text-align: left; font-size: 10px; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--text-3);
+    padding: 12px 12px 8px; border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  .results-table td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    vertical-align: top; text-align: left; font-size: 13px; color: var(--text);
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table td.initiative { font-weight: 600; width: 22%; }
+  .results-table th.results-x, .results-table td.results-x { width: 36px; text-align: right; }
+  .result-x {
+    border: 0; background: transparent; color: var(--text-3); cursor: pointer;
+    font-size: 16px; line-height: 1; padding: 0 2px;
+  }
+  .results-add td { padding: 8px 12px; }
+  .results-add input {
+    width: 100%; border: 0; background: transparent; padding: 0; font: inherit;
+    font-size: 13px; color: var(--text); outline: none;
+  }
+  .results-add input::placeholder { color: var(--text-3); }
+  .results-add button {
+    border: 0; border-radius: 10px; background: #171714; color: #fff;
+    padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
   .hl-cols {
     display: flex; gap: 10px; overflow-x: auto; align-items: stretch;
     padding-bottom: 8px;
@@ -1073,6 +1101,9 @@
     <div class="nav-section-label">WER</div>
     <a class="nav-item active" id="nav-metrics" href="#s-q4-metrics" onclick="setNav(this)">
       <span class="nav-dot" style="background:#639922"></span> Pod Main metrics
+    </a>
+    <a class="nav-item" id="nav-results" href="#s-q4-results" onclick="setNav(this)">
+      <span class="nav-dot" style="background:#3B6D11"></span> Results
     </a>
     <a class="nav-item" id="nav-announcements" href="#s-q4-announcements" onclick="setNav(this)">
       <span class="nav-dot" style="background:#BA7517"></span> Main announcements
@@ -2734,6 +2765,34 @@
       </div>
     </div>
 
+    <div class="highlights" id="s-q4-results">
+      <div class="highlights-kicker">Results</div>
+      <div class="highlights-title">Results highlights</div>
+      <div class="pod-metrics results-table">
+        <form id="results-add">
+          <table>
+            <thead>
+              <tr>
+                <th>Iniciativa</th>
+                <th>Results highlights</th>
+                <th>Next move</th>
+                <th class="results-x"></th>
+              </tr>
+            </thead>
+            <tbody id="results-board"></tbody>
+            <tbody>
+              <tr class="results-add">
+                <td><input id="results-name" placeholder="Iniciativa" aria-label="Iniciativa"></td>
+                <td><input id="results-note" placeholder="Results highlights" aria-label="Results highlights"></td>
+                <td><input id="results-next" placeholder="Next move" aria-label="Next move"></td>
+                <td class="results-x"><button type="submit">Agregar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+
     <div class="section" id="s-q4-announcements">
       <div class="section-header">
         <span class="section-num">02</span>
@@ -3673,10 +3732,12 @@
     }
     var annNav = document.getElementById('nav-announcements');
     if (annNav) annNav.style.display = week === 'q4' ? '' : 'none';
+    var resultsNav = document.getElementById('nav-results');
+    if (resultsNav) resultsNav.style.display = week === 'q4' ? '' : 'none';
     var hrefs = {
       sep7:  { metrics:'#s-metrics', moved:'#s-moved', health:'#s-health', board:'#s-board', week:'#s-week', bugs:'#s-bugs' },
       sep14: { metrics:'#s14-metrics', moved:'#s14-moved', health:'#s14-health', board:'#s14-board', week:'#s14-week', bugs:'#s14-week' },
-      q4:    { metrics:'#s-q4-metrics', announcements:'#s-q4-announcements', moved:'#s-q4-moved', health:'#s-q4-health', board:'#s-q4-board', week:'#s-q4-week', bugs:'#s-q4-bugs' }
+      q4:    { metrics:'#s-q4-metrics', results:'#s-q4-results', announcements:'#s-q4-announcements', moved:'#s-q4-moved', health:'#s-q4-health', board:'#s-q4-board', week:'#s-q4-week', bugs:'#s-q4-bugs' }
     }[week];
     if (hrefs) {
       Object.keys(hrefs).forEach(function(key) {
@@ -4004,6 +4065,74 @@ function hlRender() {
   });
 }
 try { hlRender(); } catch (e) {}
+
+var RESULTS_KEY = 'wer-results-0510-v1';
+function resultsLoad() {
+  try {
+    var raw = localStorage.getItem(RESULTS_KEY);
+    var data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  } catch (e) { return []; }
+}
+function resultsSave(list) {
+  try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch (e) {}
+}
+function resultsCell(text, className) {
+  var cell = document.createElement('td');
+  if (className) cell.className = className;
+  cell.textContent = text || '';
+  return cell;
+}
+function resultsRender() {
+  var board = document.getElementById('results-board');
+  if (!board) return;
+  var list = resultsLoad();
+  board.innerHTML = '';
+  list.forEach(function(item, index) {
+    var row = document.createElement('tr');
+    row.appendChild(resultsCell(item.name, 'initiative'));
+    row.appendChild(resultsCell(item.note));
+    row.appendChild(resultsCell(item.next));
+    var action = document.createElement('td');
+    action.className = 'results-x';
+    var remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'result-x';
+    remove.setAttribute('aria-label', 'Quitar');
+    remove.textContent = '×';
+    remove.addEventListener('click', function() {
+      var next = resultsLoad();
+      next.splice(index, 1);
+      resultsSave(next);
+      resultsRender();
+    });
+    action.appendChild(remove);
+    row.appendChild(action);
+    board.appendChild(row);
+  });
+}
+var resultsForm = document.getElementById('results-add');
+if (resultsForm) {
+  resultsForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var nameEl = document.getElementById('results-name');
+    var noteEl = document.getElementById('results-note');
+    var nextEl = document.getElementById('results-next');
+    var name = nameEl.value.trim();
+    var note = noteEl.value.trim();
+    var next = nextEl.value.trim();
+    if (!name && !note && !next) return;
+    var list = resultsLoad();
+    list.push({ name: name, note: note, next: next });
+    resultsSave(list);
+    nameEl.value = '';
+    noteEl.value = '';
+    nextEl.value = '';
+    resultsRender();
+    nameEl.focus();
+  });
+}
+try { resultsRender(); } catch (e) {}
 
 </script>
 <script>
