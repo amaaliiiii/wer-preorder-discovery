@@ -1049,43 +1049,104 @@
   .q4-full > summary::-webkit-details-marker { display: none; }
   .q4-full[open] > summary { margin-bottom: 12px; }
   #q4-dri-filters { margin: 12px 0 14px; }
-  .gate { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 24px; background: var(--bg, #F3F1EB); }
-  .gate-card { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 10px; padding: 28px 24px; border: 1px solid var(--border, #E5E5E3); border-radius: 20px; background: #fff; box-shadow: 0 18px 40px rgba(33,34,36,.08); }
-  .gate-card b { font-size: 20px; line-height: 24px; }
-  .gate-card span { font-size: 12px; line-height: 16px; color: var(--text-3, #919aaa); margin-bottom: 10px; }
-  .gate-card input { height: 44px; padding: 0 14px; border: 1px solid var(--border, #eceff3); border-radius: 12px; background: var(--bg, #f7f8f9); font-size: 14px; font-family: inherit; }
-  .gate-card input:focus { outline: none; border-color: #171714; background: #fff; }
-  .gate-card em { font-size: 12px; font-style: normal; color: #A32D2D; }
-  .gate-card button { height: 44px; border: 0; border-radius: 1000px; background: #171714; color: #fff; font-size: 14px; font-weight: 650; font-family: inherit; cursor: pointer; }
+
+  /* ── Modern polish ── */
+  :root {
+    --shadow: 0 1px 1px rgba(23,23,20,.03), 0 2px 4px rgba(23,23,20,.03), 0 12px 32px -8px rgba(23,23,20,.08);
+    --shadow-hover: 0 1px 1px rgba(23,23,20,.04), 0 4px 8px rgba(23,23,20,.04), 0 20px 40px -12px rgba(23,23,20,.14);
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; }
+  ::selection { background: #171714; color: #fff; }
+  :focus-visible { outline: 2px solid #171714; outline-offset: 2px; border-radius: 6px; }
+  [id^="s-"] { scroll-margin-top: 24px; }
+
+  .sidebar { padding: 22px 0 18px; border-right-color: rgba(23,23,20,.06); }
+  .sidebar-logo { border-bottom: none; padding-bottom: 12px; }
+  .sidebar-logo-title { font-size: 14px; font-weight: 650; }
+  .nav-section-label { padding: 10px 20px 6px; }
+  .nav-item {
+    margin: 1px 10px; padding: 8px 10px; border-left: none; border-radius: 10px;
+    transition: background .2s var(--ease), color .2s var(--ease);
+  }
+  .nav-item:hover { background: rgba(23,23,20,.04); }
+  .nav-item.active { background: #fff; box-shadow: var(--shadow); font-weight: 600; }
+  .nav-item .nav-dot { width: 7px; height: 7px; box-shadow: 0 0 0 3px rgba(23,23,20,.04); }
+  .sidebar-footer { border-top: none; padding: 12px 20px 0; }
+  .cycle-badge { border-radius: 999px; padding: 4px 10px; }
+  .sidebar-toggle { border-radius: 10px; width: 30px; height: 30px; box-shadow: var(--shadow); }
+
+  .page-kicker { letter-spacing: .1em; }
+  .page-title { font-size: 32px; font-weight: 650; letter-spacing: -.045em; }
+  .btn-ghost, .btn-primary { transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease); }
+  .btn-ghost { background: #fff; border-color: var(--border); box-shadow: var(--shadow); }
+  .btn-ghost:hover, .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+  .week-tab { transition: background .2s var(--ease), color .2s var(--ease); }
+  .week-tab:not(.active):hover { background: rgba(23,23,20,.05); color: var(--text); }
+
+  .section { margin-bottom: 48px; animation: wer-rise .5s var(--ease) both; }
+  @keyframes wer-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .section-header { align-items: center; gap: 10px; margin-bottom: 14px; }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 26px; height: 22px; padding: 0 7px; border-radius: 999px;
+    background: #171714; color: #F6F4EE; font-size: 10px; letter-spacing: .04em;
+  }
+  .section-title { font-size: 19px; font-weight: 650; letter-spacing: -.03em; }
+  .highlights-title { font-size: 19px; font-weight: 650; letter-spacing: -.03em; }
+  .highlights { margin-bottom: 48px; }
+
+  .pod-metrics, .announce-card, .q4-group, .q4-focus, .hl-col, .moved-col,
+  .metric-card, .health-panel, .kol, .week-col-wide, .q4-count-panel {
+    border-radius: 18px; border-color: rgba(23,23,20,.07); box-shadow: var(--shadow);
+  }
+  .pod-metrics th, .results-table th { padding-top: 14px; }
+  .pod-metrics td, .results-table td { padding-top: 11px; padding-bottom: 11px; }
+  .pod-metrics tbody tr, .announce-item, .q4-focus-list li { transition: background .2s var(--ease); }
+  .pod-metrics tbody tr:hover td { background: rgba(23,23,20,.025); }
+  .pod-actual { font-size: 22px; }
+  .pod-delta span { display: inline-block; padding: 2px 8px; border-radius: 999px; }
+  .pod-delta.up span { background: var(--green-bg); }
+  .pod-delta.down span { background: var(--red-bg); }
+
+  .health-stat {
+    border-radius: 16px; border-color: rgba(23,23,20,.07); background: var(--surface);
+    box-shadow: var(--shadow); transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  button.health-stat:hover, button.q4-count:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .health-stat-num { font-size: 26px; font-weight: 650; letter-spacing: -.04em; }
+  #q4-status .stage-track { height: 10px; background: rgba(23,23,20,.05); }
+  #q4-status .stage-fill { transition: width .6s var(--ease); }
+
+  .announce-item { padding: 14px 18px; }
+  .announce-item:hover { background: rgba(23,23,20,.02); }
+  .announce-emoji {
+    width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 10px; background: var(--surface-2);
+  }
+
+  .hl-col { padding: 14px 12px 10px; }
+  .hl-col-head { border-bottom: none; padding-bottom: 4px; letter-spacing: .06em; }
+  .hl-item {
+    background: #fff; border-color: rgba(23,23,20,.07); border-radius: 12px;
+    padding: 10px 10px 9px; box-shadow: 0 1px 2px rgba(23,23,20,.04);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .hl-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+
+  .q4-group-head { background: linear-gradient(180deg, #FAF8F3, #F5F2EB); }
+  .q4-tag, .moved-tag { border-radius: 999px; }
+  .results-add button, .btn-primary { border-radius: 999px; }
+  .results-add button { padding: 7px 14px; transition: transform .2s var(--ease); }
+  .results-add button:hover { transform: translateY(-1px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
 </style>
 </head>
 <body>
-
-<div class="gate" id="wer-gate">
-  <form class="gate-card" id="wer-gate-form">
-    <b>Pre-Order &amp; Discovery</b>
-    <span>Weekly execution review</span>
-    <input type="password" autofocus placeholder="Clave de acceso" aria-label="Clave de acceso" id="wer-gate-input">
-    <em id="wer-gate-error" hidden>Clave incorrecta</em>
-    <button type="submit">Entrar</button>
-  </form>
-</div>
-<script>
-(function() {
-  var KEY = "PremioDiario2026MX";
-  var STORE = "wer-preorder-access";
-  var gate = document.getElementById("wer-gate");
-  function openGate() { if (gate) gate.remove(); }
-  try { if (sessionStorage.getItem(STORE) === KEY) { openGate(); return; } } catch (e) {}
-  document.getElementById("wer-gate-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    var value = document.getElementById("wer-gate-input").value.trim();
-    if (value !== KEY) { document.getElementById("wer-gate-error").hidden = false; return; }
-    try { sessionStorage.setItem(STORE, KEY); } catch (err) {}
-    openGate();
-  });
-})();
-</script>
 
 <div class="app" id="app">
 
@@ -2703,8 +2764,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">24.10%</td>
               <td class="pod-num">23.85%</td>
-              <td class="pod-delta up">+0.07%</td>
-              <td class="pod-delta up">+1.11%</td>
+              <td class="pod-delta up"><span>+0.07%</span></td>
+              <td class="pod-delta up"><span>+1.11%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">CVR On Top Modal</div><span class="pod-metric-seg">Global</span></td>
@@ -2712,8 +2773,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">1.51%</td>
               <td class="pod-num">1.53%</td>
-              <td class="pod-delta down">-2.44%</td>
-              <td class="pod-delta down">-3.78%</td>
+              <td class="pod-delta down"><span>-2.44%</span></td>
+              <td class="pod-delta down"><span>-3.78%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">Weighted LTOR</div><span class="pod-metric-seg">Global</span></td>
@@ -2721,8 +2782,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">5.74</td>
               <td class="pod-num">5.76</td>
-              <td class="pod-delta down">-0.35%</td>
-              <td class="pod-delta down">-0.69%</td>
+              <td class="pod-delta down"><span>-0.35%</span></td>
+              <td class="pod-delta down"><span>-0.69%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">CVR APL to OPC</div><span class="pod-metric-seg">Global</span></td>
@@ -2730,8 +2791,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">24.82%</td>
               <td class="pod-num">24.70%</td>
-              <td class="pod-delta up">+0.31%</td>
-              <td class="pod-delta up">+0.80%</td>
+              <td class="pod-delta up"><span>+0.31%</span></td>
+              <td class="pod-delta up"><span>+0.80%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">Search ATC Rate</div><span class="pod-metric-seg">Global</span></td>
@@ -2739,8 +2800,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">34.40%</td>
               <td class="pod-num">33.64%</td>
-              <td class="pod-delta down">-0.24%</td>
-              <td class="pod-delta up">+1.99%</td>
+              <td class="pod-delta down"><span>-0.24%</span></td>
+              <td class="pod-delta up"><span>+1.99%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">Multi Category Adoption</div><span class="pod-metric-seg">Global</span></td>
@@ -2748,8 +2809,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">6.71%</td>
               <td class="pod-num">6.80%</td>
-              <td class="pod-delta up">+1.19%</td>
-              <td class="pod-delta down">-0.20%</td>
+              <td class="pod-delta up"><span>+1.19%</span></td>
+              <td class="pod-delta down"><span>-0.20%</span></td>
             </tr>
             <tr>
               <td class="metric"><div class="pod-metric-name">CVR HOME</div><span class="pod-metric-seg">Global</span></td>
@@ -2757,8 +2818,8 @@
               <td class="pod-target"></td>
               <td class="pod-num">1.33%</td>
               <td class="pod-num">1.12%</td>
-              <td class="pod-delta up">+2.50%</td>
-              <td class="pod-delta up">+22.18%</td>
+              <td class="pod-delta up"><span>+2.50%</span></td>
+              <td class="pod-delta up"><span>+22.18%</span></td>
             </tr>
           </tbody>
         </table>
